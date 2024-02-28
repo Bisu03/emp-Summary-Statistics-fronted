@@ -8,7 +8,7 @@ import { headersList } from "../../utils/header";
 const statistics = () => {
     const [Loading, setLoading] = useState(false)
     const [Salary, setSalary] = useState(null)
-    const [ChooseContract, setChooseContract] = useState(false);
+    const [ChooseContract, setChooseContract] = useState(null);
     const [ChooseValue, setChooseValue] = useState({
         query_key: "",
         query_value: "",
@@ -19,13 +19,14 @@ const statistics = () => {
         setChooseValue({ ...ChooseValue, [e.target.name]: e.target.value });
     };
 
-     // add employee api call
+    // add employee api call
     const HandleFetchData = async () => {
+        setSalary(null)
         setLoading(true)
         if (ChooseValue.query_key) {
             if (!ChooseValue.query_value) {
                 setLoading(false)
-                toast.warn("Choose Value")
+                return toast.warn("Choose Value")
             }
         }
 
@@ -36,7 +37,10 @@ const statistics = () => {
                 headers: headersList,
             }
             let { data } = await axios.request(reqOptions);
-            console.log(data);
+            if (data.length == 0) {
+                toast.success(data.message);
+                
+            }
             setSalary(data)
             setLoading(false)
         } catch (error) {
@@ -46,10 +50,11 @@ const statistics = () => {
         }
 
     }
+
     return (
         <>
             <Navbar />
-            <div className="flex w-full justify-evenly mt-10">
+            <div className="flex w-full justify-evenly items-center h-screen">
                 <div className="space-y-3">
                     <label className="input input-bordered input-black w-full max-w-xl flex items-center gap-2">
                         Contract
@@ -116,35 +121,30 @@ const statistics = () => {
 
 
                 </div>
-                {Salary && <div className="text-left  space-y-4">
-                    <div className="flex justify-center w-full">
-                        <div className="card w-96 bg-base-100 shadow-xl">
-                            <div className="card-body">
-                                <h1 className="text-center font-bold text-xl">Results</h1>
-                                <p className="font-semibold">
-                                    Number of Employee:- {Salary?.count ? Salary?.count : "0"}
-                                </p>
-                                <p className="font-semibold">
-                                    Minimum Salary:- {Salary?.minSalary ? Salary?.minSalary : "0"}
-                                </p>
-                                <p className="font-semibold">
-                                    Maximum Salary:- {Salary?.maxSalary ? Salary?.maxSalary : "0"}
-                                </p>
-                                <p className="font-semibold">
-                                    Average Salary:- {Salary?.averageSalary ? Salary?.averageSalary : "0"}
-                                </p>
+                {Salary &&
 
-                            </div>
+                    <div className="w-full p-4 shadow-xl lg:max-w-lg">
+                        <div className="space-y-2">
+                            <h3 className="text-2xl font-semibold">
+                                Results
+                            </h3>
+                            <p className="text-gray-600">
+                                Number of Employee:- {Salary?.count ? Salary?.count : "0"}
+                            </p>
+                            <p className="text-gray-600">
+                                Minimum Salary:- {Salary?.minSalary ? Salary?.minSalary : "0"}
+                            </p>
+                            <p className="text-gray-600">
+                                Maximum Salary:- {Salary?.maxSalary ? Salary?.maxSalary : "0"}
+                            </p>
+                            <p className="text-gray-600">
+                                Average Salary:- {Salary?.averageSalary ? Salary?.averageSalary : "0"}
+                            </p>
                         </div>
-                    </div>
+                    </div>}
 
-                </div >}
 
-            </div>
-            <div className=" flex flex-wrap w-full justify-center space-x-5 mt-5">
-                <p className="font-semibold">Contract:- {ChooseContract ? "Yes" : "No"}</p>
-                {ChooseValue.query_key && <p className="font-semibold">Query Key:- {ChooseValue.query_key == "sub_department" ? "Sub Department" : "Department"}  </p>}
-                {ChooseValue.query_value && <p className="font-semibold">Query Value:- {ChooseValue.query_value}  </p>}
+
             </div>
 
 
