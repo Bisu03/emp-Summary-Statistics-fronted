@@ -3,15 +3,23 @@ import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../../utils/apiUrl";
+import { headersList } from "../../utils/header";
 
 const list = () => {
     const [EmployeeList, setEmployeeList] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+ // add employee api call
     const FetchEmployee = async () => {
+
         try {
-            const { data } = await axios.get(`${API}/employee?page=${currentPage}`)
+            let reqOptions = {
+                url: `${API}/employee?page=${currentPage}`,
+                method: "GET",
+                headers: headersList,
+            }
+            let { data } = await axios.request(reqOptions);
             setEmployeeList(data?.list)
             setTotalPages(data?.totalPages)
         } catch (error) {
@@ -27,10 +35,16 @@ const list = () => {
         setCurrentPage(pageNumber);
     };
 
-
+ // add employee api call
     const HandleDelete = async (id) => {
         try {
-            const { data } = await axios.delete(`${API}/deleteemployee/${id}`)
+            let reqOptions = {
+                url: `${API}/employee/deleteemployee/${id}`,
+                method: "DELETE",
+                headers: headersList,
+                data: EmployeeInfo,
+            }
+            let { data } = await axios.request(reqOptions);
             FetchEmployee()
             toast.success(data.message)
         } catch (error) {

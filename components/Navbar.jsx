@@ -1,7 +1,12 @@
+import Cookies from 'js-cookie';
 import Link from 'next/link'
 import React from 'react'
 
 const Navbar = () => {
+    const HandleLogout = () => {
+        Cookies.remove("accessToken");
+        location.reload()
+    }
     return (
         <>
             <div className="navbar bg-neutral text-base-100 ">
@@ -36,7 +41,7 @@ const Navbar = () => {
                             </details>
                         </li>
 
-                        <button className="btn">Logout</button>
+                        <button className="btn" onClick={HandleLogout} >Logout</button>
 
                     </ul>
                 </div>

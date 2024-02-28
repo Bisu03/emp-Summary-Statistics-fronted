@@ -6,11 +6,10 @@ import Navbar from "../../components/Navbar";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { API } from "../../utils/apiUrl";
+import { headersList } from "../../utils/header";
 
 const add = () => {
-
     const router = useRouter()
-
     const InitialState = {
         name: "",
         salary: "",
@@ -22,15 +21,37 @@ const add = () => {
     const [EmployeeInfo, setEmployeeInfo] = useState(InitialState);
     const [Loading, setLoading] = useState(false);
 
+    // form handling
     const HandleChange = (e) => {
         setEmployeeInfo({ ...EmployeeInfo, [e.target.name]: e.target.value });
     };
 
     // add employee api call
     const HandleSubmit = async () => {
+        if (!EmployeeInfo.name) {
+            return toast.warn("Enter Name")
+        }
+        if (!EmployeeInfo.salary) {
+            return toast.warn("Enter Salary")
+        }
+        if (!EmployeeInfo.department) {
+            return toast.warn("Select Department")
+        }
+        if (!EmployeeInfo.on_contract) {
+            return toast.warn("Select Contract")
+        }
+        if (!EmployeeInfo.sub_department) {
+            return toast.warn("Select Sub Department")
+        }
         setLoading(true);
         try {
-            const { data } = await axios.post(`${API}/employee/addemployee`, EmployeeInfo);
+            let reqOptions = {
+                url: `${API}/employee/addemployee`,
+                method: "POST",
+                headers: headersList,
+                data: EmployeeInfo,
+            }
+            let { data } = await axios.request(reqOptions);
             toast.success(data.message);
             router.push("/employee/list")
         } catch (error) {

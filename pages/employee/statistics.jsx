@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { API } from "../../utils/apiUrl";
+import { headersList } from "../../utils/header";
 
 const statistics = () => {
     const [Loading, setLoading] = useState(false)
@@ -13,10 +14,12 @@ const statistics = () => {
         query_value: "",
     });
 
+    // form handling
     const HandleChange = (e) => {
         setChooseValue({ ...ChooseValue, [e.target.name]: e.target.value });
     };
 
+     // add employee api call
     const HandleFetchData = async () => {
         setLoading(true)
         if (ChooseValue.query_key) {
@@ -27,7 +30,13 @@ const statistics = () => {
         }
 
         try {
-            const { data } = await axios.get(`${API}/employee/employeesalary?on_contract=${ChooseContract}&${ChooseValue.query_key}=${ChooseValue.query_value}`)
+            let reqOptions = {
+                url: `${API}/employee/employeesalary?on_contract=${ChooseContract}&${ChooseValue.query_key}=${ChooseValue.query_value}`,
+                method: "GET",
+                headers: headersList,
+            }
+            let { data } = await axios.request(reqOptions);
+            console.log(data);
             setSalary(data)
             setLoading(false)
         } catch (error) {
