@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link'
+import Cookies from "js-cookie";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
