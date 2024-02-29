@@ -42,7 +42,6 @@ const list = () => {
                 url: `${API}/employee/deleteemployee/${id}`,
                 method: "DELETE",
                 headers: headersList,
-                data: EmployeeInfo,
             }
             let { data } = await axios.request(reqOptions);
             FetchEmployee()
